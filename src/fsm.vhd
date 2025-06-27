@@ -35,10 +35,10 @@ begin
 
     on_state_change: process(reset, switch_state)
     begin
-        if rising_edge(reset) then
+        if reset = '1' then
             op        <= SHOW_A;
             state     <= INPUT_A;
-            state_led <= "1000";
+            state_led <= "0000";
         elsif falling_edge(switch_state) then
             case state is
                 when INPUT_A => 
