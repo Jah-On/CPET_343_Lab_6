@@ -16,8 +16,8 @@ entity fsm is
         reset, switch_state : in  std_logic;
         number_input        : in  std_logic_vector(7 downto 0);
         op                  : out alu_ops;
-        a                   : out std_logic_vector(7 downto 0) := "00000000";
-        b                   : out std_logic_vector(7 downto 0) := "00000000"
+        a, b                : out std_logic_vector(7 downto 0) := "00000000";
+        state_led           : out std_logic_vector(3 downto 0) := "1000"
     );
 end entity fsm;
 
@@ -41,17 +41,21 @@ begin
         elsif (falling_edge(switch_state)) then
             case state is
                 when INPUT_A => 
-                    op    <= SHOW_B;
-                    state <= INPUT_B;
+                    op        <= SHOW_B;
+                    state     <= INPUT_B;
+                    state_led <= "0100";
                 when INPUT_B => 
-                    op    <= SUM;
-                    state <= ALU_ADD;
+                    op        <= SUM;
+                    state     <= ALU_ADD;
+                    state_led <= "0010";
                 when ALU_ADD => 
-                    op    <= DIFF;
-                    state <= ALU_SUB;
+                    op        <= DIFF;
+                    state     <= ALU_SUB;
+                    state_led <= "0001";
                 when others  => 
-                    op    <= SHOW_A;
-                    state <= INPUT_A;
+                    op        <= SHOW_A;
+                    state     <= INPUT_A;
+                    state_led <= "1000";
             end case;
         end if;
     end process on_state_change;

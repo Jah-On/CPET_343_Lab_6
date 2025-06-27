@@ -18,6 +18,7 @@ architecture benchy of tlde_bench is
         port (
             reset, clk, enter_btn : in  std_logic;
             switch                : in  std_logic_vector(7 downto 0);
+            state_led             : out std_logic_vector(3 downto 0);
             hex0, hex1, hex2      : out std_logic_vector(6 downto 0)
         );
     end component tlde;
@@ -61,6 +62,7 @@ architecture benchy of tlde_bench is
 
     signal enter_btn : std_logic                    := '1';
     signal switch_in : std_logic_vector(7 downto 0) := "00000000";
+    signal state_out : std_logic_vector(3 downto 0);
     signal hex_out   : ssd_arr_t;
 
     signal done      : std_logic                    := '0';
@@ -81,9 +83,14 @@ begin
 
     stimulate: process
     begin
-        for delay in 0 to 3 loop
+        reset <= '1';
+
+        for delay in 0 to 11 loop
             wait until rising_edge(clock);
         end loop;
+
+        reset <= '0';
+
         for case_num in 0 to 3 loop
             switch_in <= A_INPUTS(case_num);
 
@@ -117,10 +124,6 @@ begin
             wait until rising_edge(clock);
             enter_btn <= '1';
 
-            -- for delay in 0 to 3 loop
-            --     wait until rising_edge(clock);
-            -- end loop;
-
             for delay in 0 to 1 loop
                 wait until rising_edge(clock);
             end loop;
@@ -134,10 +137,6 @@ begin
             enter_btn <= '0';
             wait until rising_edge(clock);
             enter_btn <= '1';
-
-            -- for delay in 0 to 3 loop
-            --     wait until rising_edge(clock);
-            -- end loop;
 
             for delay in 0 to 1 loop
                 wait until rising_edge(clock);
@@ -166,6 +165,7 @@ begin
             clk          => clock,
             enter_btn    => enter_btn,
             switch       => switch_in,
+            state_led    => state_out,
             hex0         => hex_out(0),
             hex1         => hex_out(1),
             hex2         => hex_out(2)

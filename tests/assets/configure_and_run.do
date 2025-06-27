@@ -2,6 +2,7 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 
 radix define States {
+    "7'b1111111" " " -color "magenta",
     "7'b1000000" "0" -color "magenta",
     "7'b1111001" "1" -color "magenta",
     "7'b0100100" "2" -color "magenta",
@@ -22,13 +23,14 @@ radix define States {
 }
 
 # Add wave lines here...  i.e. add wave -noupdate -colorhsl(300, 82.10%, 56.30%) /tb/led_output
-add wave -noupdate /tlde_bench/uut/clk
-add wave -noupdate /tlde_bench/uut/reset
-add wave -noupdate /tlde_bench/enter_btn 
+add wave                 -noupdate /tlde_bench/uut/clk
+add wave                 -noupdate /tlde_bench/uut/reset
+add wave                 -noupdate /tlde_bench/enter_btn 
 add wave -radix unsigned -noupdate /tlde_bench/switch_in
-add wave -radix States -noupdate /tlde_bench/hex_out(2) 
-add wave -radix States -noupdate /tlde_bench/hex_out(1) 
-add wave -radix States -noupdate /tlde_bench/hex_out(0) 
+add wave -radix binary   -noupdate /tlde_bench/state_out
+add wave -radix States   -noupdate /tlde_bench/hex_out(2) 
+add wave -radix States   -noupdate /tlde_bench/hex_out(1) 
+add wave -radix States   -noupdate /tlde_bench/hex_out(0)
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {50 ns} 0}
