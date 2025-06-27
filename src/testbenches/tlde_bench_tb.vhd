@@ -94,7 +94,7 @@ begin
         for case_num in 0 to 3 loop
             switch_in <= A_INPUTS(case_num);
 
-            for delay in 0 to 1 loop
+            for delay in 0 to 3 loop
                 wait until rising_edge(clock);
             end loop;
 
@@ -110,7 +110,7 @@ begin
 
             switch_in <= B_INPUTS(case_num);
 
-            for delay in 0 to 1 loop
+            for delay in 0 to 3 loop
                 wait until rising_edge(clock);
             end loop;
 
@@ -124,7 +124,7 @@ begin
             wait until rising_edge(clock);
             enter_btn <= '1';
 
-            for delay in 0 to 1 loop
+            for delay in 0 to 3 loop
                 wait until rising_edge(clock);
             end loop;
 
@@ -138,7 +138,7 @@ begin
             wait until rising_edge(clock);
             enter_btn <= '1';
 
-            for delay in 0 to 1 loop
+            for delay in 0 to 3 loop
                 wait until rising_edge(clock);
             end loop;
 

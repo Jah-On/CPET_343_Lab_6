@@ -10,6 +10,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use work.types.all;
+use work.clock_synchronizer_pkg.all;
 
 entity tlde is
     port (
@@ -56,13 +57,27 @@ architecture interaction of tlde is
     signal inter_a, inter_b : std_logic_vector(7 downto 0);
     signal inter_res        : std_logic_vector(8 downto 0);
 begin
-    clock_vals: process(clk)
-    begin
-        if rising_edge(clk) then
-            stable_enter_btn <= enter_btn;
-            stable_switch    <= switch;
-        end if;
-    end process clock_vals;
+    switch_clock_syncer : clock_synchronizer
+        generic map (
+            bit_width => switch'length
+        )
+        port map (
+            clk      => clk,
+            reset    => reset,
+            async_in => switch,
+            sync_out => stable_switch
+        );
+
+    btn_clock_syncer : clock_synchronizer
+        generic map (
+            bit_width => 1
+        )
+        port map (
+            clk         => clk,
+            reset       => reset,
+            async_in(0) => enter_btn,
+            sync_out(0) => stable_enter_btn
+        );
 
     de1 : fsm
         port map (
