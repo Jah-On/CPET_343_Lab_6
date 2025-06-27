@@ -18,6 +18,7 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY ../output_files
 
 # 2] include your relative path files here
 set_global_assignment -name VHDL_FILE ../src/types.vhd
+set_global_assignment -name VHDL_FILE ../src/clock_synchronizer.vhd
 set_global_assignment -name VHDL_FILE ../src/alu.vhd
 set_global_assignment -name VHDL_FILE ../src/fsm.vhd
 set_global_assignment -name VHDL_FILE ../src/ssd_d3.vhd
