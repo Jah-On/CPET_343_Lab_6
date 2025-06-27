@@ -15,7 +15,8 @@ entity tlde is
     port (
         reset, clk, enter_btn : in  std_logic;
         switch                : in  std_logic_vector(7 downto 0);
-        hex0, hex1, hex2      : out std_logic_vector(6 downto 0)
+        hex0, hex1, hex2      : out std_logic_vector(6 downto 0);
+        state_led             : out std_logic_vector(3 downto 0)
     );
 end entity tlde;
 
@@ -25,7 +26,8 @@ architecture interaction of tlde is
             reset, switch_state : in  std_logic;
             number_input        : in  std_logic_vector(7 downto 0);
             op                  : out alu_ops;
-            a, b                : out std_logic_vector(7 downto 0)
+            a, b                : out std_logic_vector(7 downto 0) := "00000000";
+            state_led           : out std_logic_vector(3 downto 0) := "1000"
         );
     end component fsm;
 
@@ -69,7 +71,8 @@ begin
             number_input => stable_switch,
             op           => inter_op,
             a            => inter_a,
-            b            => inter_b
+            b            => inter_b,
+            state_led    => state_led
         );
 
     de2 : alu
