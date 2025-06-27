@@ -59,6 +59,11 @@ set_location_assignment PIN_AD30 -to hex2[4]
 set_location_assignment PIN_AC29 -to hex2[5]
 set_location_assignment PIN_AC30 -to hex2[6]
 
+set_location_assignment PIN_V16  -to state_led[0]
+set_location_assignment PIN_W16  -to state_led[1]
+set_location_assignment PIN_V17  -to state_led[2]
+set_location_assignment PIN_V18  -to state_led[3]
+
 set_location_assignment PIN_AA14 -to enter_btn
 
 execute_flow -compile
