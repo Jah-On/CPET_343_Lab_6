@@ -22,46 +22,35 @@ entity fsm is
 end entity fsm;
 
 architecture state_switcher of fsm is
-    signal state     : fsm_states                   := INPUT_A;
+    signal current_state    : fsm_states                       := INPUT_A;
 begin
-    update: process(number_input, state)
+    update: process(number_input, current_state)
     begin
-        if    state = INPUT_A then
+        if    current_state = INPUT_A then
             a <= number_input;
-        elsif state = INPUT_B then
+        elsif current_state = INPUT_B then
             b <= number_input;
         end if;
     end process update;
 
-    -- on_reset: process(reset)
-    -- begin
-    --     if reset = '1' then
-    --         state     <= INPUT_A;
-    --         state_led <= "0000";
-    --     end if;
-    -- end process on_reset;
-
     on_button: process(reset, switch_state)
     begin
-        if reset'event then
-            if reset = '1' then
-                state_led <= "0000";
-            else
-                state     <= INPUT_A;
-            end if;
+        if reset = '1' then
+            -- Will switch to INPUT_A after reset
+            current_state     <= ALU_SUB;
         elsif switch_state = '0' then
-            case state is
-                when INPUT_A => state <= INPUT_B;
-                when INPUT_B => state <= ALU_ADD;
-                when ALU_ADD => state <= ALU_SUB;
-                when others  => state <= INPUT_A;
+            case current_state is
+                when INPUT_A => current_state <= INPUT_B;
+                when INPUT_B => current_state <= ALU_ADD;
+                when ALU_ADD => current_state <= ALU_SUB;
+                when others  => current_state <= INPUT_A;
             end case;
         end if;
     end process on_button;
 
-    set_ALU_op: process(state)
+    set_ALU_op: process(current_state)
     begin
-        case state is
+        case current_state is
             when INPUT_A => op <= SHOW_A;
             when INPUT_B => op <= SHOW_B;
             when ALU_ADD => op <= SUM;
@@ -69,14 +58,18 @@ begin
         end case;
     end process set_ALU_op;
 
-    set_LED: process(state)
+    set_LED: process(reset, current_state)
     begin
-        case state is
-            when INPUT_A => state_led <= "1000";
-            when INPUT_B => state_led <= "0100";
-            when ALU_ADD => state_led <= "0010";
-            when others  => state_led <= "0001";
-        end case;
+        if reset = '1' then
+            state_led <= "0000";
+        else
+            case current_state is
+                when INPUT_A => state_led <= "1000";
+                when INPUT_B => state_led <= "0100";
+                when ALU_ADD => state_led <= "0010";
+                when others  => state_led <= "0001";
+            end case;
+        end if;
     end process set_LED;
     
 end architecture state_switcher;
