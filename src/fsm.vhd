@@ -23,7 +23,7 @@ entity fsm is
 end entity fsm;
 
 architecture state_switcher of fsm is
-    signal current_state    : fsm_states := ALU_SUB;
+    signal current_state    : fsm_states := INPUT_A;
 begin
     update: process(number_input, current_state)
     begin
@@ -37,16 +37,14 @@ begin
     on_button: process(reset, switch_state)
     begin
         if reset = '1' then
-            current_state     <= ALU_SUB;
-        elsif switch_state = '0' then
+            current_state     <= INPUT_A;
+        elsif falling_edge(switch_state) then
             case current_state is
                 when INPUT_A => current_state <= INPUT_B;
                 when INPUT_B => current_state <= ALU_ADD;
                 when ALU_ADD => current_state <= ALU_SUB;
                 when others  => current_state <= INPUT_A;
             end case;
-        else
-            current_state <= current_state;
         end if;
     end process on_button;
 
