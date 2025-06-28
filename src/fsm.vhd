@@ -33,32 +33,50 @@ begin
         end if;
     end process update;
 
-    on_state_change: process(reset, switch_state)
+    -- on_reset: process(reset)
+    -- begin
+    --     if reset = '1' then
+    --         state     <= INPUT_A;
+    --         state_led <= "0000";
+    --     end if;
+    -- end process on_reset;
+
+    on_button: process(reset, switch_state)
     begin
-        if rising_edge(reset) then
-            op        <= SHOW_A;
-            state     <= INPUT_A;
-            state_led <= "1000";
-        elsif falling_edge(switch_state) then
+        if reset'event then
+            if reset = '1' then
+                state_led <= "0000";
+            else
+                state     <= INPUT_A;
+            end if;
+        elsif switch_state = '0' then
             case state is
-                when INPUT_A => 
-                    op        <= SHOW_B;
-                    state     <= INPUT_B;
-                    state_led <= "0100";
-                when INPUT_B => 
-                    op        <= SUM;
-                    state     <= ALU_ADD;
-                    state_led <= "0010";
-                when ALU_ADD => 
-                    op        <= DIFF;
-                    state     <= ALU_SUB;
-                    state_led <= "0001";
-                when others  => 
-                    op        <= SHOW_A;
-                    state     <= INPUT_A;
-                    state_led <= "1000";
+                when INPUT_A => state <= INPUT_B;
+                when INPUT_B => state <= ALU_ADD;
+                when ALU_ADD => state <= ALU_SUB;
+                when others  => state <= INPUT_A;
             end case;
         end if;
-    end process on_state_change;
+    end process on_button;
+
+    set_ALU_op: process(state)
+    begin
+        case state is
+            when INPUT_A => op <= SHOW_A;
+            when INPUT_B => op <= SHOW_B;
+            when ALU_ADD => op <= SUM;
+            when others  => op <= DIFF;
+        end case;
+    end process set_ALU_op;
+
+    set_LED: process(state)
+    begin
+        case state is
+            when INPUT_A => state_led <= "1000";
+            when INPUT_B => state_led <= "0100";
+            when ALU_ADD => state_led <= "0010";
+            when others  => state_led <= "0001";
+        end case;
+    end process set_LED;
     
 end architecture state_switcher;
