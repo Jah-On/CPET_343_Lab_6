@@ -13,7 +13,8 @@ use work.types.all;
 
 entity fsm is
     port (
-        reset, switch_state : in  std_logic;
+        reset               : in  std_logic;
+        switch_state        : in  std_logic                    := '1';
         number_input        : in  std_logic_vector(7 downto 0);
         op                  : out alu_ops;
         a, b                : out std_logic_vector(7 downto 0) := "00000000";
@@ -22,7 +23,7 @@ entity fsm is
 end entity fsm;
 
 architecture state_switcher of fsm is
-    signal current_state    : fsm_states                       := INPUT_A;
+    signal current_state    : fsm_states := ALU_SUB;
 begin
     update: process(number_input, current_state)
     begin
@@ -36,7 +37,6 @@ begin
     on_button: process(reset, switch_state)
     begin
         if reset = '1' then
-            -- Will switch to INPUT_A after reset
             current_state     <= ALU_SUB;
         elsif switch_state = '0' then
             case current_state is
@@ -45,6 +45,8 @@ begin
                 when ALU_ADD => current_state <= ALU_SUB;
                 when others  => current_state <= INPUT_A;
             end case;
+        else
+            current_state <= current_state;
         end if;
     end process on_button;
 
